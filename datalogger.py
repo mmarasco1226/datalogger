@@ -78,8 +78,12 @@ def get_sense_data():
 #while True:
 #    print(get_sense_data())
 
-with open('data.csv', 'w', newline="") as f:
+now = datetime.now()
+
+with open('data%s.csv' %now, 'w', newline='') as f:
     data_writer = writer(f)
+
+    
 
     data_writer.writerow(['temp', 'pres', 'hum',
                           'yaw', 'pitch', 'roll',
