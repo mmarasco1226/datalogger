@@ -107,13 +107,9 @@ with open('data%s.csv' %now, 'w', newline='') as f:
                 sense.show_message("recording data")
                 
                 while True:
-                    try:
-                        
-                        data = get_sense_data()
-                        data_writer.writerow(data)
-
-                    except Exception as e:
-                        return 'Error occured : ' + str(e)
+                    
+                    data = get_sense_data()
+                    data_writer.writerow(data)
                     
         
 
