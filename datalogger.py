@@ -1,21 +1,29 @@
+#drone data logger using sene hat
+#!/usr/bin/env python
+
 from sense_hat import SenseHat
 from datetime import datetime
 from csv import writer
 
 sense = SenseHat()
+sense.show_message("ready")
+
+
 
 def get_sense_data():
     sense_data = []
 
     t = sense.get_temperature()
+    #convert C to F
+    tf = 9/5 * t + 32
     p = sense.get_pressure()
     h = sense.get_humidity()
 
-    t = round(t, 1)
+    tf = round(tf, 1)
     p = round(p, 1)
     h = round(h, 1)
 
-    sense_data.append(t)
+    sense_data.append(tf)
     sense_data.append(p)
     sense_data.append(h)
 
@@ -85,16 +93,28 @@ with open('data%s.csv' %now, 'w', newline='') as f:
 
     
 
-    data_writer.writerow(['temp', 'pres', 'hum',
+    data_writer.writerow(['temp F', 'pres', 'hum',
                           'yaw', 'pitch', 'roll',
                           'mag_x', 'mag_y', 'mag_z',
                           'acc_x', 'acc_y', 'acc_z',
                           'gyro_x', 'gyro_y', 'gyro_z',
                           'datetime'])
 
+
     while True:
-        data = get_sense_data()
-        data_writer.writerow(data)
+        for event in sense.stick.get_events():
+            if event.action == 'pressed' and event.direction == 'middle':
+                sense.show_message("recording data")
+                
+                while True:
+                    try:
+                        
+                        data = get_sense_data()
+                        data_writer.writerow(data)
+
+                    except Exception as e:
+                        return 'Error occured : ' + str(e)
+                    
         
 
 
